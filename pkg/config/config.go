@@ -1,0 +1,32 @@
+package config
+
+import (
+	"github.com/caarlos0/env"
+	"github.com/gofiber/fiber/v2/log"
+	"github.com/joho/godotenv"
+)
+
+type EnvConfig struct {
+	AppPort string `env:"APP_PORT,required"`
+	DBHost     string `env:"DB_HOST,required"`
+	DBUsername string `env:"DB_USERNAME,required"`
+	DBPassword string `env:"DB_PASSWORD,required"`
+	DBName     string `env:"DB_NAME,required"`
+	// DBssl      string `env:"DB_SSL,required"`  
+}
+
+func NewEnvConfig() *EnvConfig {
+	err := godotenv.Load()
+
+	if err != nil {
+		log.Fatalf("Unable to load the .env => %e", err)
+	}
+
+	cfg := &EnvConfig{}
+
+	if err := env.Parse(cfg); err != nil {
+		log.Fatalf("Unable to load variables from the .env => %e", err)
+	}
+
+	return cfg
+}
