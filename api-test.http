@@ -1,0 +1,21 @@
+@BASE_URL=http://localhost:8081/api
+
+###
+POST {{BASE_URL}}/users
+Content-Type: application/json
+
+{
+    "email":"test@test.com",
+    "name": "test",
+    "password": "test"
+}
+
+###
+GET {{BASE_URL}}/users/3
+Content-Type: application/json
+
+###
+GET {{BASE_URL}}/users
+Content-Type: application/json
+
+

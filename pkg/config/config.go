@@ -1,21 +1,24 @@
 package config
 
 import (
+	"fmt"
+
 	"github.com/caarlos0/env"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/joho/godotenv"
 )
 
 type EnvConfig struct {
-	AppPort string `env:"APP_PORT,required"`
+	AppPort    string `env:"APP_PORT,required"`
 	DBHost     string `env:"DB_HOST,required"`
 	DBUsername string `env:"DB_USERNAME,required"`
 	DBPassword string `env:"DB_PASSWORD,required"`
 	DBName     string `env:"DB_NAME,required"`
-	// DBssl      string `env:"DB_SSL,required"`  
+	// DBssl      string `env:"DB_SSL,required"`
 }
 
 func NewEnvConfig() *EnvConfig {
+	fmt.Println("load")
 	err := godotenv.Load()
 
 	if err != nil {

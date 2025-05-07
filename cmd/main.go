@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"go-clean-arch-fiber-boilerplate/internal/app/handlers"
+	"go-clean-arch-fiber-boilerplate/internal/app/repositories"
+	"go-clean-arch-fiber-boilerplate/internal/app/services"
 	"go-clean-arch-fiber-boilerplate/pkg/config"
 	"go-clean-arch-fiber-boilerplate/pkg/database"
 
@@ -12,13 +15,16 @@ func main() {
 
 	config := config.NewEnvConfig()
 	db := database.Init(config, database.DBMigrator)
-	_ = db
 
 	app := fiber.New()
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("fiber hexagonal")
-	})
+	// Route Group
+	server := app.Group("/api")
+
+	// User
+	userRepository := repositories.NewUserRepository(db)
+	userService := services.NewUserService(userRepository)
+	handlers.NewUserHandler(server.Group("/users"), userService)
 
 	app.Listen(fmt.Sprintf(":%s", config.AppPort))
 }
