@@ -18,7 +18,7 @@ type userHandler struct {
 	service services.UserService
 }
 
-func NewUserHandler(router fiber.Router, userService services.UserService) {
+func NewUserHandler(router fiber.Router, userService services.UserService) UserHandler {
 	handler := &userHandler{
 		service: userService,
 	}
@@ -26,6 +26,8 @@ func NewUserHandler(router fiber.Router, userService services.UserService) {
 	router.Get("/:id", handler.GetUserByID)
 	router.Post("/", handler.CreateUser)
 	router.Get("/", handler.ListUsers)
+
+	return handler
 }
 
 func (h *userHandler) CreateUser(c *fiber.Ctx) error {
