@@ -29,11 +29,11 @@ func (s *userService) CreateUser(name string, email string, password string) (mo
 }
 
 func (s *userService) GetUserByID(id uint) (models.User, error) {
-	return s.userRepository.GetByID(id)
+	return s.userRepository.FindByID(id)
 }
 
 func (s *userService) GetUsers() ([]models.User, error) {
-	users, err := s.userRepository.GetAll()
+	users, err := s.userRepository.FindAll()
 	if err != nil {
 		return nil, err
 	}

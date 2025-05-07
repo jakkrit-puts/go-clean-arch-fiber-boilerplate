@@ -11,7 +11,7 @@ Content-Type: application/json
 }
 
 ###
-GET {{BASE_URL}}/users/3
+GET {{BASE_URL}}/users/1
 Content-Type: application/json
 
 ###

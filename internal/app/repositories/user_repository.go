@@ -8,8 +8,8 @@ import (
 
 type UserRepository interface {
 	Create(user models.User) (models.User, error)
-	GetByID(id uint) (models.User, error)
-	GetAll() ([]models.User, error)
+	FindByID(id uint) (models.User, error)
+	FindAll() ([]models.User, error)
 }
 
 type userRepository struct {
@@ -28,7 +28,7 @@ func (r *userRepository) Create(user models.User) (models.User, error) {
 	return user, nil
 }
 
-func (r *userRepository) GetByID(id uint) (models.User, error) {
+func (r *userRepository) FindByID(id uint) (models.User, error) {
 	var user models.User
 
 	tx := r.db.First(&user, id)
@@ -39,7 +39,7 @@ func (r *userRepository) GetByID(id uint) (models.User, error) {
 	return user, nil
 }
 
-func (r *userRepository) GetAll() ([]models.User, error) {
+func (r *userRepository) FindAll() ([]models.User, error) {
 	var users []models.User
 
 	if err := r.db.Find(&users).Error; err != nil {

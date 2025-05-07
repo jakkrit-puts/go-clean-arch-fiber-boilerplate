@@ -8,21 +8,27 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type UserHandler struct {
+type UserHandler interface {
+	CreateUser(c *fiber.Ctx) error
+	GetUserByID(c *fiber.Ctx) error
+	ListUsers(c *fiber.Ctx) error
+}
+
+type userHandler struct {
 	service services.UserService
 }
 
 func NewUserHandler(router fiber.Router, userService services.UserService) {
-	handler := &UserHandler{
+	handler := &userHandler{
 		service: userService,
 	}
 
 	router.Get("/:id", handler.GetUserByID)
 	router.Post("/", handler.CreateUser)
-	router.Get("/", handler.GetUserList)
+	router.Get("/", handler.ListUsers)
 }
 
-func (h *UserHandler) CreateUser(c *fiber.Ctx) error {
+func (h *userHandler) CreateUser(c *fiber.Ctx) error {
 
 	var input models.UserInputValidate
 
@@ -41,26 +47,36 @@ func (h *UserHandler) CreateUser(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
-		"message": "user create successfully.",
+		"message": "success",
 		"data":    user,
 	})
 }
 
-func (h *UserHandler) GetUserByID(c *fiber.Ctx) error {
-	id, _ := strconv.Atoi(c.Params("id"))
+func (h *userHandler) GetUserByID(c *fiber.Ctx) error {
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).SendString("invalid user id")
+	}
+
 	user, err := h.service.GetUserByID(uint(id))
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).SendString("user not found")
 	}
 
-	return c.JSON(user)
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "success",
+		"data":    user,
+	})
 }
 
-func (h *UserHandler) GetUserList(c *fiber.Ctx) error {
+func (h *userHandler) ListUsers(c *fiber.Ctx) error {
 	users, err := h.service.GetUsers()
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
 
-	return c.JSON(users)
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "success",
+		"data":    users,
+	})
 }
